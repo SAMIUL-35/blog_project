@@ -1,0 +1,14 @@
+{% extends 'base.html'%}
+
+
+{% block content %}
+
+<h3>this is author page</h3>
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button class="btn btn-primary">submit</button>
+</form>
+
+
+{% endblock %}
