@@ -2,5 +2,27 @@
 
 {% block content %}
 
-<h3>This is home page</h3>
-{%  endblock %}
+
+<div class="d-flex justify-content-center gap-4">
+    {% for post in data %}
+<div class="card" style="width: 18rem;">
+    <div class="card-body ">
+      <h5 class="card-title">{{ post.title }}</h5> <!-- Display the post title -->
+      <h6 class="card-subtitle mb-2 text-muted">{{ post.subtitle }}</h6> <!-- Display the subtitle -->
+      <p class="card-text">{{ post.content }}</p> <!-- Display the content -->
+      <div class="d-flex justify-content-between">
+        <P>{{post.author.name}}</P>
+        <div>
+            {% for i in post.category.all%}
+<p>{{i}}</p>
+            {% endfor%}
+        </div>
+       
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+
+
+{% endblock %}
