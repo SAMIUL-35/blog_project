@@ -12,7 +12,7 @@ def add_post(request):
     else:
         p_form = post_form()
 
-    return render(request, 'profile.html', {'form': p_form})
+    return render(request, 'home.html', {'form': p_form})
 
 def edit_post(request,id):
     post=models.Post.objects.get(pk=id)
