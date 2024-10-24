@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from .form import RegisterForm,ChangeUserForm 
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
+from django.contrib.auth import authenticate, login,logout,update_session_auth_hash
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from post.models import Post
 
 def register(request):
     if request.method == 'POST':
@@ -43,7 +44,11 @@ def user_login(request):
 
 
 @login_required
-def profile(request):
+def profile(request): 
+      data = Post.objects.filter(author=request.user) 
+      return render(request, 'profile.html', {'data':data})
+@login_required
+def edit_profile(request):
     user = request.user
     if request.method == 'POST':
         profile_form = ChangeUserForm(request.POST,instance=user)
@@ -55,4 +60,23 @@ def profile(request):
     else:
         profile_form = ChangeUserForm(instance=user)
 
-    return render(request, 'profile.html', {'form': profile_form, })
+    return render(request, 'update_profile.html', {'form': profile_form, })
+
+
+def User_logout(request):
+    logout(request)
+    return redirect('home')
+@login_required
+def change_pass(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)  # ensure correct order
+        if form.is_valid():
+            print(form.cleaned_data)
+            form.save()
+            messages.success(request, 'Password changed successfully')  # Fixed typo
+            update_session_auth_hash(request, form.user)
+            return redirect('profile')
+    else:
+        form = PasswordChangeForm(user=request.user)
+
+    return render(request, 'change_pass.html', {'form': form})

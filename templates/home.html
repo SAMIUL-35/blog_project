@@ -1,31 +1,42 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{% block content %}
-  <div class="row">
-    {% for post in data %}
-      <div class="col-sm-12 col-md-6 col-lg-4">
-        <div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">{{ post.title }}</h5>
-              <p class="card-text">{{ post.content }}</p>
-              <p>Author: {{ post.author.name }}</p>
-              
-              <div class="d-flex gap-4">
-                <p>Category: </p>
-                {% for i in post.category.all %}
-                  <button class="btn btn-warning" disabled>{{ i.name }}</button>
-                {% endfor %}
-              </div>
 
-              <div class="d-flex justify-content-center gap-4 mt-3">
-                <a href="{% url 'edit_post' post.id %}" class="btn btn-primary fs-5">Edit</a>
-                <a href="{% url 'delete_post' post.id %}" class="btn btn-danger fs-5">Delete</a>
-              </div>
+{% block content %}
+<div class="d-flex flex-wrap">
+  <div class="col-2">
+    {% for i in category %}
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="category"  id="{{ i.id }}">
+        <label class="form-check-label" for="{{ i.id }}">
+            <a href="{% url 'category_wise_post' i.slug %}">{{ i.name }}</a>  <!-- This should work fine if i.slug is valid -->
+        </label>
+    </div>
+    {% endfor %}
+</div>
+
+  
+  <div class="col-10">
+    <div class="row">
+      {% for post in data %}
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">TITLE: {{ post.title }}</h5>
+            <p class="card-text">CONTENT: {{ post.content }}</p>
+            <p>Author: {{ post.author.first_name }}</p>
+
+            <div class="d-flex gap-4">
+              <p>Category: </p>
+              <!-- Iterate over the categories for each post -->
+              {% for cat in post.category.all %}
+              <button class="btn btn-warning" disabled>{{ cat.name }}</button>
+              {% endfor %}
             </div>
           </div>
         </div>
       </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   </div>
+</div>
 {% endblock %}

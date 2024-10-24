@@ -4,12 +4,35 @@
 {% block content %}
 
 
-<form style="width: 50%;margin: auto;" method="POST">
-    <p>Edit Profile</p>
-    {% csrf_token %}
-    {{form |crispy}}
-    <button class="btn btn-primary">submit</button>
-</form>
+<div>
+    <a  class="btn btn-primary" href="{%url 'edit_profile' %}">Update Your Profile</a>
+</div>
+<div class="row">
+    {% for post in data %}
+      <div class="col-sm-12 col-md-6 col-lg-4">
+        <div>
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="card-text">{{ post.content }}</p>
+              <p>Author: {{  post.author.first_name }}</p>
+              
+              <div class="d-flex gap-4">
+                <p>Category: </p>
+                {% for i in post.category.all %}
+                  <button class="btn btn-warning" disabled>{{ i.name }}</button>
+                {% endfor %}
+              </div>
 
+              <div class="d-flex justify-content-center gap-4 mt-3">
+                <a href="{% url 'edit_post' post.id %}" class="btn btn-primary fs-5">Edit</a>
+                <a href="{% url 'delete_post' post.id %}" class="btn btn-danger fs-5">Delete</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 
 {% endblock %}
