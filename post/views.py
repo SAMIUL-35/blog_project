@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 from .form import post_form
 from post import models
 from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView
 
 @login_required
 def add_post(request):
@@ -16,6 +18,16 @@ def add_post(request):
         p_form = post_form()
 
     return render(request, 'post.html', {'form': p_form})
+
+class view_addPost(CreateView):
+    model=models.Post
+    form_class=post_form
+    template_name='post.html'
+    success_url=reverse_lazy('add_post')
+    def form_valid(self, form):
+        form.instance.author=self.request.user
+        return super().form_valid(form)
+
 
 @login_required
 def edit_post(request,id):

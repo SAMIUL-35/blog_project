@@ -12,3 +12,6 @@ def add_category(request):
         cat_form = category_form()
 
     return render(request, 'category.html', {'form': cat_form})
+
+
+
