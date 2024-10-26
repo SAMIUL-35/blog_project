@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .form import post_form
 from post import models
+from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView,UpdateView,DeleteView
 
@@ -21,7 +22,7 @@ def add_post(request):
 
 
 # class based create view
-
+@method_decorator(login_required, name='dispatch')
 class view_addPost(CreateView):
     model=models.Post
     form_class=post_form
@@ -48,7 +49,7 @@ def edit_post(request,id):
 
     return render(request, 'post.html', {'form': p_form})
 
-
+@method_decorator(login_required, name='dispatch')
 class edit_post(UpdateView):
         model=models.Post
         form_class=post_form
@@ -62,7 +63,7 @@ def delete_post(request,id):
     post.delete()
     return  redirect('home')  
 
-
+@method_decorator(login_required, name='dispatch')
 class delete_post(DeleteView):
         model=models.Post
         template_name='delete.html'
